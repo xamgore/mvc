@@ -88,46 +88,8 @@ style: |
         left: -7px;
     }
 
-
-
-
-
-    #Cover h2 {
-        margin:30px 0 0;
-        color:#FFF;
-        text-align:center;
-        font-size:70px;
-        }
-
     pre.low { line-height: 1.6 }
 
-    #Cover {
-        background-color: #fff;
-        }
-    #Cover h2 {
-        color: black;
-        font-size: 5em;
-        }
-    #Cover p {
-        margin:10px 0 0;
-        text-align:center;
-        color:#fff;
-        font-style:italic;
-        font-size:20px;
-        }
-        #Cover p a {
-            color:#FFF;
-            }
-    #Picture h2 {
-        color:#FFF;
-        }
-    #SeeMore h2 {
-        font-size:100px
-        }
-    #SeeMore img {
-        width:0.72em;
-        height:0.72em;
-        }
 ---
 
 # **MVC Pattern** который вы ждали всегда
@@ -338,6 +300,8 @@ style: |
 * ​**Controller** — обрабатывает запрос <mark class="next">           | распихивает данные</mark>
 * ​**Model** — данные и операции над ними <mark class="next">   | умеет в базу данных</mark>
 * ​**View** — умеет выводить данные
+* ...**<mark>???</mark>**
+* ...**<mark>PROFIT</mark>**
 
 ## *Невинности нет* MVC был хотя бы раз у каждого!
 
@@ -347,12 +311,32 @@ style: |
 
 ## *Даже у Google!* MVC был хотя бы раз у каждого!
 
-<!-- рисуй картиночку! -->
+*Рисуй картиночку!* <mark># TODO</mark>
+{: .next }
 
-* Браузер посылает HTTP-запрос
-* Сервер гугла передаёт управление главному контроллеру
-* Контроллер обращается к поиску текста, изображений, рекламе
-* Полученные данные передаёт в представление
-* Web, mobile, JSON версия
+## *Даже у тебя ;)* MVC был хотя бы раз у каждого!
+
+Вспоминаем первое задание, магазин.
+{: .next }
+
+* ...Обработчик команд — роутер
+* ...Обработка конкретной команды — конкретный контроллер
+* ...Библиотека классов магазина — модели
+* ...View тривиальный — `<mark>Console</mark>.WriteLine()`
+
+## *Даже у меня ;)* MVC был хотя бы раз у каждого!
+
+Второе задание, калькулятор выражений
+
+*Вставь скриншотик!* <mark>#TODO</mark>
+{: .next }
+
+## Где нет MVC
+
+*Вставь скрин кода!* <mark>#TODO</mark>
+{: .next }
+
+
+
 
 <!--img src="pictures/MVC-Process.svg" style="height: 400px" class="next"-->
