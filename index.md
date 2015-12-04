@@ -5,7 +5,7 @@ layout: bright
 style: |
     .slide { background-color: white; }
 
-    .slide pre code { line-height: inherit; }
+    .slide pre code { line-height: inherit; margin: inherit; }
 
     .slide mark {
         background: 0 0;
@@ -90,10 +90,60 @@ style: |
 
     pre.low { line-height: 1.6 }
 
+    mark.tag { color: #050074 }
+
+    mark.property { color: #007F00 }
+
+    mark.variable { color: #5F0002 }
+
 ---
 
 # **MVC Pattern** который вы ждали всегда
 {: .is-title.sky }
+
+---
+
+<img src="pictures/nomvc.jpg" alt="" style="width:100%"/>
+
+---
+
+<img src="pictures/nomvc_html.png" alt="" style="width:100%"/>
+
+---
+
+<img src="pictures/nomvc_css.png" alt="" style="width:100%"/>
+
+---
+
+<img src="pictures/nomvc_sql.png" alt="" style="width:100%"/>
+
+---
+
+<img src="pictures/nomvc_php.png" alt="" style="width:100%"/>
+
+---
+
+<img src="pictures/nomvc.jpg" alt="" style="width:100%"/>
+
+<div class="next">
+    <span style="color: gray"><small>Рейтинг: <b>
+        <span style="background-color: rgb(192, 255, 192)">
+            &nbsp;+7
+        </span></b>
+    &nbsp;(За: 11 | Против: –4)</small></span>
+    <br/><a href="?">Комментарии (48)</a>
+</div>
+
+
+## Что плохого?
+
+* Трудно читать
+* Нельзя тестировать
+* Невозможно поддерживать
+* Хочется плакать
+
+## Что делать?
+{:.shout}
 
 ---
 
@@ -251,6 +301,7 @@ style: |
 ## Router
 
 В зависимости от запроса вызывает нужный контроллер.
+{: style="margin-top: -20px"}
 
 ~~~csharp
 <mark>public static void</mark> Main(<mark>string</mark>[] args) {
@@ -262,37 +313,41 @@ style: |
     }
 }
 ~~~
-{: .low.next }
+{: .low.next style="margin-top: -10px" }
 
 ---
 
 ~~~csharp
 <mark>class</mark> MarksController {
     <mark>static void</mark> Action() {
-        student = Console.ReadInteger();
-        <mark class="comment">RatesView.PrintRatesOf(student)</mark>;
+        id = Console.ReadInteger();
+        student = StudentModel.With(id);
+        <mark class="comment">RatesView.Print(student.Оценочки)</mark>;
     }
 }
 ~~~
 {: .low }
+{: style="margin-top: -20px"}
 
 ---
 
 ~~~csharp
 <mark>class</mark> MarksController {
     <mark>static void</mark> Action() {
-        student = Console.ReadInteger();
-        RatesView.PrintRatesOf(student);
+        id = Console.ReadInteger();
+        student = StudentModel.With(id);
+        RatesView.Print(student.Оценочки);
     }
 }
 
 <mark>class</mark> RatesView {
-    <mark>static void</mark> PrintRatesOf(student)
+    <mark>static void</mark> Print(оценочки)
         <mark>=></mark> Console.WriteLine(
-            <mark>string</mark>.Join(<mark class="comment">", "</mark>, student.Оценочки));
+            <mark>string</mark>.Join(<mark class="comment">", "</mark>, оценочки));
 }
 ~~~
 {: .low }
+{: style="margin-top: -20px"}
 
 ## Ещё раз и кратко
 
@@ -303,6 +358,102 @@ style: |
 * ...**<mark>???</mark>**
 * ...**<mark>PROFIT</mark>**
 
+## Разделяем код
+
+* ...Модель для работы со статьями (рейтинг + комментарии)
+* ...Контроллер будет определять цвет рейтинга (<span
+    style="background-color:rgb(241, 168, 168)">&nbsp;#F1A8A8 </span>, <span
+    style="background-color:rgb(192, 255, 192)">&nbsp;#C0FFC0 </span>)
+* ...Вывод поместим во View (весь HTML и CSS там)
+
+---
+
+~~~php
+<mark>class</mark> View {
+  <mark>function</mark> display() {
+    <mark>echo</mark> 'Рейтинг: <span style="background-color: <mark>$color</mark>">';
+    <mark>echo</mark> '<mark>$rating</mark>';
+    <mark>echo</mark> '</span>';
+    <mark>echo</mark> '(За: <mark>$positive</mark> | Против: <mark>$negative</mark>)';
+    <mark>echo</mark> '<a href="/articles/?act=comments&id=<mark>$id</mark>">;
+    <mark>echo</mark> 'Комментарии (<mark>$count</mark>)';
+    <mark>echo</mark> '</a>';
+  }
+}
+~~~
+{: style="margin-top: -20px; margin-left: -15px"}
+
+---
+
+~~~php
+<mark>class</mark> Article {
+  <mark>function</mark> __construct($id) { <mark class="comment">\…</mark> }
+
+  <mark>function</mark> getRating() {
+    <mark>return</mark> sql(<mark class="comment">"SELECT `rate` FROM `article` WHERE id = <mark>$id</mark>"</mark>);
+  }
+
+  <mark>function</mark> countComments() {
+    <mark>return</mark> sql(<mark class="comment">"COUNT (*) FROM `comments` WHERE id = <mark>$id</mark>"</mark>);
+  }
+}
+
+~~~
+{: style="margin-top: -20px; margin-left: -15px"}
+
+---
+
+~~~php
+<mark>class</mark> Controller {
+  <mark>function</mark> action() {
+      $article = <mark>new</mark> Article($URL[<mark>'id'</mark>]);
+       $rating = $article<mark>-></mark>getRating();
+           $id = $article<mark>-></mark>id;
+
+      $color = $rating > <mark>0</mark> ? <mark>'red'</mark> : <mark>'green'</mark>;
+      View<mark>::</mark>display();
+  }
+}
+~~~
+{: style="margin-top: -20px; margin-left: -15px"}
+
+---
+
+~~~php
+<mark class="comment">class Controller {
+  function action() {
+      $article = new Article($URL['id']);
+       $rating = $article->getRating();
+           $id = $article->id;</mark>
+
+      $color = $rating > <mark>0</mark> ? <mark>'red'</mark> : <mark>'green'</mark>;
+      <mark class="comment">View::display();
+  }
+}</mark>
+~~~
+{: style="margin-top: -20px; margin-left: -15px"}
+
+## В чём проблема?
+
+* Мы в смешали `View` с `Controller`
+* Нужно лезть в `Controller`, чтобы изменить `Представление`
+* Нарушили свою же концепцию ради разделения кода
+
+~~~php
+$color = $rating > <mark>0</mark> ? <mark>'red'</mark> : <mark>'green'</mark>;
+<mark>echo</mark> 'Рейтинг: <span style="background-color: <mark>$color</mark>">';
+~~~
+{: .next }
+
+## Чего добились?
+
+* ...Переиспользование кода
+* ...Можем тестировать компоненты отдельно
+* ...Каждый разработчик занимается своим компонентом
+
+## Изучено!
+{:.shout}
+
 ## *Невинности нет* MVC был хотя бы раз у каждого!
 
 <span class="next">Что ты делаешь, когда не знаешь, что делать?</span><br/>
@@ -311,8 +462,10 @@ style: |
 
 ## *Даже у Google!* MVC был хотя бы раз у каждого!
 
-*Рисуй картиночку!* <mark># TODO</mark>
-{: .next }
+<div style="font-size: 2em"><span class="next">Controller</span> <span
+    class="next"><mark>→</mark> Models</span> <span
+    class="next"><mark>→</mark> View<mark class="important next">s</mark></span>
+</div>
 
 ## *Даже у тебя ;)* MVC был хотя бы раз у каждого!
 
@@ -326,17 +479,72 @@ style: |
 
 ## *Даже у меня ;)* MVC был хотя бы раз у каждого!
 
-Второе задание, калькулятор выражений
+Второе задание, калькулятор выражений, winforms
 
-*Вставь скриншотик!* <mark>#TODO</mark>
-{: .next }
+* ...Designer.cs — представление
+* ...ClickEventListener — контроллер
+* ...Formula — модель
 
-## Где нет MVC
+## DeveloperRefusesToWorkException
 
-*Вставь скрин кода!* <mark>#TODO</mark>
-{: .next }
+<div style="margin-top: -10px">
+<span class="next">< Хьюстон, у нас проблемы!<br/></span>
+<span class="next">> Что случилось, почему?<br/></span>
+<span class="next">< Наши верстальщики ненавидят PHP!<br/></span>
+<span class="next">> Ёлки-палки, и что мы будем делать?<br/></span>
+<span class="next">< Придумай что-нибудь, у тебя же есть <mark>чертоги разума</mark>!<br/></span>
+<span class="next">> ...<br/></span>
+<span class="next">> Кажется, нам нужен шаблонизатор<br/></span>
+</div>
 
+---
 
+~~~php
+<mark>class</mark> View {
+  <mark>function</mark> display() {
+    <mark>echo</mark> 'Рейтинг: <span style="background-color: <mark>$color</mark>">';
+    <mark>echo</mark> '<mark>$rating</mark>';
+    <mark>echo</mark> '</span>';
+    <mark>echo</mark> '(За: <mark>$positive</mark> | Против: <mark>$negative</mark>)';
+    <mark>echo</mark> '<a href="/articles/?act=comments&id=<mark>$id</mark>">;
+    <mark>echo</mark> 'Комментарии (<mark>$count</mark>)';
+    <mark>echo</mark> '</a>';
+  }
+}
+~~~
+{: style="margin-top: -20px; margin-left: -15px"}
 
+---
 
-<!--img src="pictures/MVC-Process.svg" style="height: 400px" class="next"-->
+~~~php
+Рейтинг: <span style="background-color: <mark>{​{ color }}</mark>">
+    <mark>{​{ rating }}</mark>
+</span>
+
+(За: <mark>{​{ positive }}</mark> | Против: <mark>{​{ $negative }}</mark>)
+
+<a href="/articles/?act=comments&id=<mark>{​{ $id }}</mark>">
+    Комментарии (<mark>{​{ $count }}</mark>)
+</a>
+~~~
+
+---
+
+~~~php
+Привет, {​{ User[<mark class="comment">'name'</mark>] <mark>| capitalize</mark> }}!
+Привет, Хьюстон!
+~~~
+
+~~~php
+{​{ <mark class="comment">'You are in'</mark> <mark>| rus</mark> }} {​{ year <mark>| date('YYYY')</mark> }}
+Ты в 2015
+~~~
+
+~~~php
+Тебе {​{ User[<mark class="comment">'years'</mark>] <mark>| human</mark> }} лет
+Тебе 20 лет
+~~~
+
+---
+
+<img src="pictures/MVC-Process.svg" style="height: 90%; position:absolute; top:0; left: 26.2%">
