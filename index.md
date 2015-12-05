@@ -559,35 +559,11 @@ $color = $rating > <mark>0</mark> ? <mark>'red'</mark> : <mark>'green'</mark>;
 {: .low }
 
 
-## *Two Step View* Модели модифицируются
-
-* Забрали оценки студента у модели
-* Выбрали только те, которые нужны преподавателю
-* Отобразили
-
----
-
-~~~php
-<mark>class</mark> Controller {
-    <mark>function</mark> action() {
-        $student = StudentModel<mark>::</mark>with($id);
-
-        $rates = $student<mark>-></mark>rates<mark>-></mark>filter(препода);
-
-        <mark>echo</mark> View<mark>::</mark>from(<mark class="comment">'path/to/template.tmp'</mark>, [
-            'article' <mark>=> new</mark> Article($URL[<mark class="comment">'id'</mark>])
-        ]);
-    }
-}</mark>
-~~~
-{: .low style="margin-top: -20px; margin-left: -15px"}
-
 ## Итоги
 
 * Movel-View-Controller
 * Template View, Шаблонизатор
 * Front Controller, Router
-* Two Step View
 
 ---
 
